@@ -22,7 +22,7 @@ function firstNonWhitespaceChar(node: ReactNode): string | null {
   }
 
   if (Array.isArray(node)) {
-    for (const child of node) {
+    for (const child of node as ReactNode[]) {
       const character = firstNonWhitespaceChar(child);
       if (character !== null) {
         return character;
