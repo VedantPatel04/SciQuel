@@ -10,7 +10,7 @@ export default function StoryParagraph({
       {isLead
         ? wrapFirstAsciiAlphanumeric(
             children,
-            "font-customTest text-[2em] leading-none",
+            "font-customTest text-[1.25em] leading-none",
           )
         : children}
     </p>
