@@ -1,6 +1,25 @@
+"use client";
+
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
+const HamburgerButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <button
+      className="temp-class h-[2rem] cursor-pointer"
+      onClick={onClick}
+      onMouseEnter={() => {
+        console.log("hover");
+      }}
+    >
+      <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
+      <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
+      <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
+      <span className="sr-only">Open Sidebar.</span>
+    </button>
+  );
+};
 
 export default function SideBar() {
   const [showSideBar, setShowSideBar] = useState(false);
@@ -9,8 +28,11 @@ export default function SideBar() {
   const isEditor = session?.user?.roles?.includes("EDITOR") ?? false;
   useEffect(() => {
     const handler = (event: Event) => {
+      // console.log("in handler use effect");
+      // console.log(event.target);
       if (menuRef.current != null) {
         if (!menuRef.current.contains(event.target as Node)) {
+          // console.log("here");
           setShowSideBar(false);
         }
       }
@@ -22,16 +44,16 @@ export default function SideBar() {
   });
 
   return (
-    <div>
-      <button
-        className="h-[2rem] cursor-pointer"
-        onClick={() => setShowSideBar((showSideBar) => !showSideBar)}
-      >
-        <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
-        <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
-        <div className="mx-3.5 my-1.5 h-1 w-8 bg-white"></div>
-        <span className="sr-only">Open Sidebar</span>
-      </button>
+    <div
+      onMouseEnter={() => {
+        console.log("test mouse enter");
+      }}
+    >
+      <HamburgerButton
+        onClick={() => {
+          setShowSideBar(!showSideBar);
+        }}
+      />
 
       <div
         className="fixed top-0 z-50 h-screen w-56  -translate-x-full

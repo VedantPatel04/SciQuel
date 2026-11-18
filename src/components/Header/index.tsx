@@ -15,7 +15,6 @@ import SideBar from "./SideBar/SideBar";
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-  // const pathname = usePathname();
 
   const onSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,11 +60,6 @@ export default function Header() {
           <ProfileButton />
         </div>
       </div>
-      {/* {pathname.split("/")[1] === "stories" ? (
-          <SeriesSubHeader />
-        ) : (
-          <MainSubHeader />
-        )} */}
       <MainSubHeader />
     </header>
   );
