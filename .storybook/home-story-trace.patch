@@ -1,0 +1,54 @@
+diff --git a/src/app/Home.stories.tsx b/src/app/Home.stories.tsx
+index 3f56a17..d6b169c 100644
+--- a/src/app/Home.stories.tsx
++++ b/src/app/Home.stories.tsx
+@@ -2,7 +2,7 @@ import env from "@/lib/env";
+ import { type Meta, type StoryObj } from "@storybook/nextjs";
+ import { rscDecorator } from "#.storybook/promiseDecorator.tsx";
+ import { http, HttpResponse } from "msw";
+-import { reset } from "../../mocks/data.mock";
++import { db, reset } from "../../mocks/data.mock";
+ import {
+   createStories,
+   getStories,
+@@ -53,15 +53,25 @@ export const VariableStoryCount: Story = {
+   },
+   beforeEach: (story) => {
+     reset(123);
+-    createStories((story.args as { numStories: number }).numStories);
++    const { numStories } = story.args as { numStories: number };
++    createStories(numStories);
++    console.log(
++      "[Home probe] setup",
++      JSON.stringify({ numStories, databaseCount: db.story.count() }),
++    );
+   },
+   parameters: {
+     ...MainTest.parameters,
+     msw: {
+       handlers: [
+-        http.get(`${env.NEXT_PUBLIC_SITE_URL}/api/stories`, () => {
++        http.get(`${env.NEXT_PUBLIC_SITE_URL}/api/stories`, ({ request }) => {
++          const stories = getStories(10, false);
++          console.log(
++            "[Home probe] MSW response",
++            JSON.stringify({ path: new URL(request.url).pathname, count: stories.length }),
++          );
+           return HttpResponse.json({
+-            stories: getStories(10, false),
++            stories,
+             page_number: 1,
+             total_pages: 1,
+           });
+diff --git a/src/app/page.tsx b/src/app/page.tsx
+index f8c85e3..949b9cf 100644
+--- a/src/app/page.tsx
++++ b/src/app/page.tsx
+@@ -6,6 +6,7 @@ import env from "@/lib/env";
+ import { type GetStoriesResult } from "./api/stories/route";
+ 
+ export default async function Home() {
++  console.count("[Home probe] Home entered");
+   const [whatsNewArticles] = await Promise.all([
+     getWhatsNewArticles(),
+     // getExampleStory(),
